@@ -1,0 +1,14 @@
+version: "2"
+services:
+  pychain:
+    container_name: "pychain"
+    build:
+      context: "../"
+      dockerfile: "docker/Dockerfile"
+    volumes:
+      - ../:/usr/src/app/
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_DEBUG: 1
+      FLASK_APP: ./app.py
