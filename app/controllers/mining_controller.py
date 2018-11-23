@@ -1,3 +1,5 @@
+from time import time
+
 from flask import jsonify
 
 from app.models.block import Block
@@ -12,7 +14,9 @@ class MiningController:
         self.hash_converter = hash_converter
 
     def mine(self):
+        transaction_hash = self.hash_converter.hash(str(time()) + self.node_address)
         transaction = Transaction(
+            transaction_hash=transaction_hash,
             sender_address="0",
             recipient_address=self.node_address,
             amount=1

@@ -16,7 +16,8 @@ class PychainEncoder(JSONEncoder):
             }
         if isinstance(o, Transaction):
             return {
-                'sender': o.sender_address,
-                'recipient': o.recipient_address,
+                'transaction_hash': o.transaction_hash,
+                'sender_address': o.sender_address,
+                'recipient_address': o.recipient_address,
                 'amount': o.amount,
             }

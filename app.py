@@ -15,7 +15,7 @@ blockchain = Blockchain(Block.genesis_block())
 node_address = "node_address"
 hash_converter = HashConverter(PychainEncoder)
 
-transaction_controller = TransactionController(blockchain)
+transaction_controller = TransactionController(blockchain, hash_converter)
 mining_controller = MiningController(blockchain, node_address, hash_converter)
 block_controller = BlockController(blockchain)
 
