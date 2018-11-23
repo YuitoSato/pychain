@@ -2,11 +2,11 @@ from time import time
 
 
 class Block:
-    def __init__(self, index, transactions, proof, previous_hash):
+    def __init__(self, index, transactions, nonce, previous_hash):
         self.index = index
         self.transactions = transactions
         self.timestamp = time()
-        self.proof = proof
+        self.nonce = nonce
         self.previous_hash = previous_hash
 
     @classmethod
@@ -14,6 +14,6 @@ class Block:
         return Block(
             index=1,
             transactions=[],
-            proof=100,
+            nonce=100,
             previous_hash=1
         )

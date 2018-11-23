@@ -11,7 +11,7 @@ class PychainEncorder(JSONEncoder):
                 'index': o.index,
                 'timestamp': o.timestamp,
                 'transactions': o.transactions,
-                'proof': o.proof,
+                'nonce': o.nonce,
                 'previous_hash': o.previous_hash,
             }
         if isinstance(o, Transaction):
