@@ -3,7 +3,7 @@ from flask import Flask, request
 from app.controllers.block_controller import BlockController
 from app.controllers.mining_controller import MiningController
 from app.controllers.transaction_controller import TransactionController
-from app.controllers.pychain_encorder import PychainEncorder
+from app.utils.pychain_encorder import PychainEncorder
 from app.models.block import Block
 from app.stores.blockchain import Blockchain
 

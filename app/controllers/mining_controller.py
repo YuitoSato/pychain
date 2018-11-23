@@ -2,7 +2,7 @@ import json
 
 from flask import jsonify
 
-from app.controllers.pychain_encorder import PychainEncorder
+from app.utils.pychain_encorder import PychainEncorder
 from app.models.block import Block
 from app.models.proof_of_work import ProofOfWork
 from app.models.transaction import Transaction
