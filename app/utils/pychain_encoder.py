@@ -4,7 +4,7 @@ from app.models.block import Block
 from app.models.transaction import Transaction
 
 
-class PychainEncorder(JSONEncoder):
+class PychainEncoder(JSONEncoder):
     def default(self, o):
         if isinstance(o, Block):
             return {

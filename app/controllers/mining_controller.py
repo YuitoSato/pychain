@@ -2,7 +2,7 @@ import json
 
 from flask import jsonify
 
-from app.utils.pychain_encorder import PychainEncorder
+from app.utils.pychain_encoder import PychainEncoder
 from app.models.block import Block
 from app.models.proof_of_work import ProofOfWork
 from app.models.transaction import Transaction
@@ -28,7 +28,7 @@ class MiningController:
 
         # if not(proof_result.isValid()):
 
-        block_string = json.dumps(last_block, sort_keys=True, cls=PychainEncorder).encode()
+        block_string = json.dumps(last_block, sort_keys=True, cls=PychainEncoder).encode()
         previous_hash = hashlib.sha256(block_string).hexdigest()
 
         block = Block(

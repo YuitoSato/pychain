@@ -3,15 +3,17 @@ from flask import Flask, request
 from app.controllers.block_controller import BlockController
 from app.controllers.mining_controller import MiningController
 from app.controllers.transaction_controller import TransactionController
-from app.utils.pychain_encorder import PychainEncorder
+from app.utils.hash_converter import HashConverter
+from app.utils.pychain_encoder import PychainEncoder
 from app.models.block import Block
 from app.stores.blockchain import Blockchain
 
 app = Flask(__name__)
-app.json_encoder = PychainEncorder
+app.json_encoder = PychainEncoder
 
 blockchain = Blockchain(Block.genesis_block())
 node_address = "node_address"
+hash_converter = HashConverter(PychainEncoder)
 
 transaction_controller = TransactionController(blockchain)
 mining_controller = MiningController(blockchain, node_address)
