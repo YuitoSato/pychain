@@ -16,7 +16,7 @@ node_address = "node_address"
 hash_converter = HashConverter(PychainEncoder)
 
 transaction_controller = TransactionController(blockchain)
-mining_controller = MiningController(blockchain, node_address)
+mining_controller = MiningController(blockchain, node_address, hash_converter)
 block_controller = BlockController(blockchain)
 
 

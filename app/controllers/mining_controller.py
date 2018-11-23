@@ -1,18 +1,15 @@
-import json
-
 from flask import jsonify
 
-from app.utils.pychain_encoder import PychainEncoder
 from app.models.block import Block
 from app.models.proof_of_work import ProofOfWork
 from app.models.transaction import Transaction
-import hashlib
 
 
 class MiningController:
-    def __init__(self, blockchain, node_address):
+    def __init__(self, blockchain, node_address, hash_converter):
         self.blockchain = blockchain
         self.node_address = node_address
+        self.hash_converter = hash_converter
 
     def mine(self):
         transaction = Transaction(
@@ -28,14 +25,13 @@ class MiningController:
 
         # if not(proof_result.isValid()):
 
-        block_string = json.dumps(last_block, sort_keys=True, cls=PychainEncoder).encode()
-        previous_hash = hashlib.sha256(block_string).hexdigest()
+        previous_hash = self.hash_converter.hash(last_block)
 
         block = Block(
             index=len(self.blockchain.blocks) + 1,
             transactions=self.blockchain.current_transactions,
             nonce=proof_result.nonce,
-            previous_hash=hashlib
+            previous_hash=previous_hash
         )
 
         self.blockchain.append_block(block)
