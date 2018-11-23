@@ -1,5 +1,6 @@
 from flask import Flask, request
 
+from app.controllers.block_controller import BlockController
 from app.controllers.mining_controller import MiningController
 from app.controllers.transaction_controller import TransactionController
 from app.controllers.pychain_encorder import PychainEncorder
@@ -14,6 +15,7 @@ node_address = "node_address"
 
 transaction_controller = TransactionController(blockchain)
 mining_controller = MiningController(blockchain, node_address)
+block_controller = BlockController(blockchain)
 
 
 @app.route('/')
@@ -34,6 +36,11 @@ def fetch_current_transactions():
 @app.route('/mine')
 def mine():
     return mining_controller.mine()
+
+
+@app.route('/blocks')
+def fetch_blocks():
+    return block_controller.fetch_blocks()
 
 
 if __name__ == '__main__':
