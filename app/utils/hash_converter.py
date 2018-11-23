@@ -1,8 +1,6 @@
 import hashlib
 import json
 
-from app.utils.pychain_encoder import PychainEncoder
-
 
 class HashConverter:
     def __init__(self, encoder):
