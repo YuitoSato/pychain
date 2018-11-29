@@ -12,8 +12,8 @@ class Block:
     @classmethod
     def genesis_block(cls):
         return Block(
-            index=1,
-            transactions=[],
-            nonce=100,
-            previous_hash=1
+            index = 1,
+            transactions = [],
+            nonce = 100,
+            previous_hash = 1
         )
