@@ -8,5 +8,5 @@ class UnconfirmedTransactionRepository:
     def create_transaction(self, transaction):
         self.unconfirmed_transactions.append(transaction)
 
-    def list_all(self):
+    def list_unconfirmed_transactions(self):
         return self.unconfirmed_transactions

@@ -6,4 +6,7 @@ class BlockchainRepository:
         self.blocks.append(block)
 
     def find_last_block(self):
+        return self.blocks[-1]
+
+    def list_blocks(self):
         return self.blocks

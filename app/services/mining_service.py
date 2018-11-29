@@ -20,8 +20,8 @@ class MiningService:
             recipient_address = self.node_address,
             amount = 1
         )
-        self.unconfirmed_transaction_repository.append_transaction(transaction)
-        last_block = self.blockchain.last_block
+        self.unconfirmed_transaction_repository.create_transaction(transaction)
+        last_block = self.blockchain_repository.find_last_block()
         last_nonce = last_block.nonce
         proof_of_work = ProofOfWork(last_nonce, 10)
         proof_result = proof_of_work.prove()
@@ -30,11 +30,18 @@ class MiningService:
 
         previous_hash = self.hash_converter.hash(last_block)
 
-        block = Block(index = len(self.blockchain.blocks) + 1, transactions = self.blockchain.current_transactions,
-            nonce = proof_result.nonce, previous_hash = previous_hash)
+        blocks = self.blockchain_repository.list_blocks()
+        print(blocks)
+        unconfirmed_transactions = self.unconfirmed_transaction_repository.list_unconfirmed_transactions()
 
-        self.blockchain.append_block(block)
+        block = Block(
+            index = len(blocks) + 1,
+            transactions = unconfirmed_transactions,
+            nonce = proof_result.nonce,
+            previous_hash = previous_hash
+        )
+
+        self.blockchain_repository.create_block(block)
         self.unconfirmed_transaction_repository.delete_all()
-        self.blockchain.current_transactions = []
 
         return block

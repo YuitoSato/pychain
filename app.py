@@ -3,21 +3,17 @@ from flask import Flask, request
 from app.controllers.block_controller import BlockController
 from app.controllers.mining_controller import MiningController
 from app.controllers.unconfirmed_transaction_controller import UnconfirmedTransactionController
+from app.models.block import Block
 from app.repositories.blockchain_repository import BlockchainRepository
 from app.repositories.unconfirmed_transaction_repository import UnconfirmedTransactionRepository
+from app.services.block_service import BlockService
 from app.services.mining_service import MiningService
 from app.services.unconfirmed_transaction_service import UnconfirmedTransactionService
 from app.utils.hash_converter import HashConverter
 from app.utils.pychain_encoder import PychainEncoder
-from app.models.block import Block
-from app.stores.blockchain import Blockchain
-from app.stores.unconfirmed_transaction_store import UnconfirmedTransactionStore
 
 app = Flask(__name__)
 app.json_encoder = PychainEncoder
-
-blockchain = Blockchain(Block.genesis_block())
-unconfirmed_transaction_store = UnconfirmedTransactionStore()
 
 node_address = "node_address"
 hash_converter = HashConverter(encoder = PychainEncoder)
@@ -37,6 +33,9 @@ unconfirmed_transaction_service = UnconfirmedTransactionService(
     unconfirmed_transaction_repository = unconfirmed_transaction_repository,
     blockchain_repository = blockchain_repository
 )
+block_service = BlockService(
+    blockchain_repository = blockchain_repository
+)
 
 # Controllers
 unconfirmed_transaction_controller = UnconfirmedTransactionController(
@@ -44,7 +43,7 @@ unconfirmed_transaction_controller = UnconfirmedTransactionController(
     hash_converter = hash_converter
 )
 mining_controller = MiningController(mining_service = mining_service)
-# block_controller = BlockController(blockchain)
+block_controller = BlockController(block_service = block_service)
 
 @app.route('/')
 def hello_world():
@@ -56,7 +55,7 @@ def create_transaction():
     return unconfirmed_transaction_controller.create_transaction(request)
 
 
-@app.route('/transactions/current')
+@app.route('/transactions/unconfirmed')
 def fetch_current_transactions():
     return unconfirmed_transaction_controller.list_unconfirmed_transactions()
 
@@ -66,9 +65,9 @@ def mine():
     return mining_controller.mine()
 
 
-# @app.route('/blocks')
-# def fetch_blocks():
-    # return block_controller.fetch_blocks()
+@app.route('/blocks')
+def fetch_blocks():
+    return block_controller.list_blocks()
 
 
 if __name__ == '__main__':
