@@ -11,4 +11,44 @@ services:
       - "5000:5000"
     environment:
       FLASK_DEBUG: 1
-      FLASK_APP: ./app.py
+      FLASK_APP: './app.py'
+    networks:
+      - app-net
+
+#  mongodb:
+#    image: 'mongo:latest'
+#    container_name: 'mongodb'
+#    restart: 'always'
+#    environment:
+#      -  'MONGODB_USER='
+#      -  'MONGODB_PASS='
+#    volumes:
+#      - 'mongodb-data:/data/db'
+#      - './mongod.conf.orig:/etc/mongod.conf.orig'
+#    ports:
+#      - '27017:27017'
+#    command: '--bind_ip_all --ipv6'
+#    networks:
+#      - app-net
+#
+#
+#  mongo-express:
+#    container_name: mongo-express
+#    links:
+#      - 'mongodb:mongo'
+#    networks:
+#      - app-net
+#    ports:
+#      - '8081:8081'
+#    environment:
+#      - 'ME_CONFIG_OPTIONS_EDITORTHEME=ambiance'
+#      - 'ME_CONFIG_BASICAUTH_USERNAME='
+#      - 'ME_CONFIG_BASICAUTH_PASSWORD='
+#    image: mongo-express
+#
+#volumes:
+#  mongodb-data: {}
+
+networks:
+  app-net:
+    driver: bridge

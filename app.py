@@ -7,6 +7,7 @@ from app.utils.hash_converter import HashConverter
 from app.utils.pychain_encoder import PychainEncoder
 from app.models.block import Block
 from app.stores.blockchain import Blockchain
+from pymongo import MongoClient
 
 app = Flask(__name__)
 app.json_encoder = PychainEncoder
@@ -15,13 +16,18 @@ blockchain = Blockchain(Block.genesis_block())
 node_address = "node_address"
 hash_converter = HashConverter(PychainEncoder)
 
-transaction_controller = TransactionController(blockchain, hash_converter)
+client = MongoClient('localhost', 27017)
+db = client.pychain_dev
+block_collection = db.block_collection
+transaction_collection = db.transaction_collection
+
+transaction_controller = TransactionController(blockchain, hash_converter, transaction_collection)
 mining_controller = MiningController(blockchain, node_address, hash_converter)
 block_controller = BlockController(blockchain)
 
-
 @app.route('/')
 def hello_world():
+    transaction_collection.insert_one({'name': 'yuito'})
     return 'Hello World!!!!'
 
 

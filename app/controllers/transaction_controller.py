@@ -6,15 +6,17 @@ from app.models.transaction import Transaction
 
 
 class TransactionController:
-    def __init__(self, blockchain, hash_converter):
+    def __init__(self, blockchain, hash_converter, transaction_collection):
         self.blockchain = blockchain
         self.hash_converter = hash_converter
+        self.transaction_collection = transaction_collection
 
     def create_transaction(self, request):
         values = request.get_json()
-        request_str = (str(time()) + str(values)).encode('utr-8')
+        request_str = (str(time()) + str(values)).encode('utf-8')
         transaction_hash = self.hash_converter.hash(request_str)
         transaction = Transaction(transaction_hash, values['sender'], values['recipient'], values['amount'])
+        # self.transaction_collection.insert_one({"transaction_hash": transaction_hash})
 
         self.blockchain.append_transaction(transaction)
         index = self.blockchain.last_block.index + 1
