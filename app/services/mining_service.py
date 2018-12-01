@@ -6,18 +6,28 @@ from app.models.transaction import Transaction
 
 
 class MiningService:
-    def __init__(self, unconfirmed_transaction_repository, blockchain_repository, node_address, hash_converter):
+    def __init__(
+        self,
+        unconfirmed_transaction_repository,
+        blockchain_repository,
+        my_node_repository,
+        node_address,
+        hash_converter
+    ):
         self.unconfirmed_transaction_repository = unconfirmed_transaction_repository
         self.blockchain_repository = blockchain_repository
+        self.my_node_repository = my_node_repository
         self.node_address = node_address
         self.hash_converter = hash_converter
 
     def mine(self):
         transaction_hash = self.hash_converter.hash(str(time()) + self.node_address)
+
+        my_node = self.my_node_repository.find_my_node()
         transaction = Transaction(
             transaction_hash = transaction_hash,
             sender_address = "0",
-            recipient_address = self.node_address,
+            recipient_address = my_node.address,
             amount = 1
         )
         self.unconfirmed_transaction_repository.create_transaction(transaction)

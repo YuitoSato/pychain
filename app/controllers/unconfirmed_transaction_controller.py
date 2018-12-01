@@ -21,4 +21,4 @@ class UnconfirmedTransactionController:
 
     def list_unconfirmed_transactions(self):
         unconfirmed_transactions = self.unconfirmed_transaction_service.list_unconfirmed_transactions()
-        return jsonify(unconfirmed_transactions ), 200
+        return jsonify(unconfirmed_transactions), 200
