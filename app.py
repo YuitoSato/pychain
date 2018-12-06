@@ -1,3 +1,5 @@
+import sys
+
 from flask import Flask, request
 
 from app.controllers.block_controller import BlockController
@@ -18,6 +20,7 @@ from app.services.node_service import NodeService
 from app.services.unconfirmed_transaction_service import UnconfirmedTransactionService
 from app.utils.hash_converter import HashConverter
 from app.utils.pychain_encoder import PychainEncoder
+from app.ws.block_ws import BlockWs
 
 app = Flask(__name__)
 app.json_encoder = PychainEncoder
@@ -36,19 +39,29 @@ unconfirmed_transaction_repository = UnconfirmedTransactionRepository()
 my_node_repository = MyNodeRepository(node = my_node)
 node_repository = NodeRepository()
 
+# WS
+block_ws = BlockWs()
+
 # Services
 mining_service = MiningService(
     unconfirmed_transaction_repository = unconfirmed_transaction_repository,
     blockchain_repository = blockchain_repository,
     my_node_repository = my_node_repository,
     hash_converter = hash_converter,
-    node_address = node_address
+    node_address = node_address,
+    node_repository = node_repository,
+    block_ws = block_ws
 )
 unconfirmed_transaction_service = UnconfirmedTransactionService(
     unconfirmed_transaction_repository = unconfirmed_transaction_repository,
     blockchain_repository = blockchain_repository
 )
-block_service = BlockService(blockchain_repository = blockchain_repository)
+block_service = BlockService(
+    blockchain_repository = blockchain_repository,
+    block_ws = block_ws,
+    node_repository = node_repository,
+    hash_converter = hash_converter
+)
 my_node_service = MyNodeService(my_node_repository = my_node_repository)
 node_service = NodeService(node_repository)
 
@@ -103,10 +116,10 @@ def create_node():
     return node_controller.create_node(request)
 
 
-app.run(host = '0.0.0.0', port = 5000)
+# app.run(host = '0.0.0.0', port = 5000)
 
-# if __name__ == '__main__':
-#     if sys.argv is not None and sys.argv[1] is not None:
-#         app.run(host='0.0.0.0', port=int(sys.argv[1]))
-#     else:
-#         app.run(host='0.0.0.0', port=5000)
+if __name__ == '__main__':
+    if sys.argv is not None and sys.argv[1] is not None:
+        app.run(host='0.0.0.0', port=int(sys.argv[1]))
+    else:
+        app.run(host='0.0.0.0', port=5000)

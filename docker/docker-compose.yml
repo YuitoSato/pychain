@@ -1,10 +1,12 @@
-version: "2"
+version: "3"
 services:
-  pychain:
-    container_name: "pychain"
+  pychain-node1:
+    container_name: "pychain-node1"
     build:
       context: "../"
       dockerfile: "docker/Dockerfile"
+      args:
+        port: "5000"
     volumes:
       - ../:/usr/src/app/
     ports:
@@ -15,39 +17,22 @@ services:
     networks:
       - app-net
 
-#  mongodb:
-#    image: 'mongo:latest'
-#    container_name: 'mongodb'
-#    restart: 'always'
-#    environment:
-#      -  'MONGODB_USER='
-#      -  'MONGODB_PASS='
-#    volumes:
-#      - 'mongodb-data:/data/db'
-#      - './mongod.conf.orig:/etc/mongod.conf.orig'
-#    ports:
-#      - '27017:27017'
-#    command: '--bind_ip_all --ipv6'
-#    networks:
-#      - app-net
-#
-#
-#  mongo-express:
-#    container_name: mongo-express
-#    links:
-#      - 'mongodb:mongo'
-#    networks:
-#      - app-net
-#    ports:
-#      - '8081:8081'
-#    environment:
-#      - 'ME_CONFIG_OPTIONS_EDITORTHEME=ambiance'
-#      - 'ME_CONFIG_BASICAUTH_USERNAME='
-#      - 'ME_CONFIG_BASICAUTH_PASSWORD='
-#    image: mongo-express
-#
-#volumes:
-#  mongodb-data: {}
+  pychain-node2:
+    container_name: "pychain-node2"
+    build:
+      context: "../"
+      dockerfile: "docker/Dockerfile"
+      args:
+        port: "5001"
+    volumes:
+      - ../:/usr/src/app/
+    ports:
+      - "5001:5001"
+    environment:
+      FLASK_DEBUG: 1
+      FLASK_APP: './app.py'
+    networks:
+      - app-net
 
 networks:
   app-net:
