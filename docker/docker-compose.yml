@@ -17,6 +17,21 @@ services:
     networks:
       - app-net
 
+  sqlite-node1:
+    container_name: "sqlite-node1"
+    image: sqlite
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: 'pychain_db'
+      MYSQL_USER: "root"
+    restart: 'always'
+    expose:
+      - '3306'
+    ports:
+      - "3307:3306"
+    networks:
+      - app-net
+
   pychain-node2:
     container_name: "pychain-node2"
     build:
