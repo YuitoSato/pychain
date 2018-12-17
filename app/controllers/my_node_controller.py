@@ -16,3 +16,7 @@ class MyNodeController:
     def find_my_node(self):
         node = self.my_node_service.find_my_node()
         return jsonify(node), 200
+
+    def send_my_node(self):
+        self.my_node_service.send_my_node()
+        return jsonify({}), 200

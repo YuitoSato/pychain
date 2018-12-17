@@ -21,6 +21,7 @@ from app.services.unconfirmed_transaction_service import UnconfirmedTransactionS
 from app.utils.hash_converter import HashConverter
 from app.utils.pychain_encoder import PychainEncoder
 from app.ws.block_ws import BlockWs
+from app.ws.node_ws import NodeWs
 
 app = Flask(__name__)
 app.json_encoder = PychainEncoder
@@ -36,11 +37,12 @@ my_node = Node(
 # Repositories
 blockchain_repository = BlockchainRepository(genesis_block = Block.genesis_block())
 unconfirmed_transaction_repository = UnconfirmedTransactionRepository()
-my_node_repository = MyNodeRepository(node = my_node)
 node_repository = NodeRepository()
+my_node_repository = MyNodeRepository(node = my_node)
 
 # WS
 block_ws = BlockWs()
+node_ws = NodeWs()
 
 # Services
 mining_service = MiningService(
@@ -62,7 +64,10 @@ block_service = BlockService(
     node_repository = node_repository,
     hash_converter = hash_converter
 )
-my_node_service = MyNodeService(my_node_repository = my_node_repository)
+my_node_service = MyNodeService(
+    my_node_repository = my_node_repository,
+    node_ws = node_ws
+)
 node_service = NodeService(node_repository)
 
 # Controllers
@@ -116,10 +121,23 @@ def create_node():
     return node_controller.create_node(request)
 
 
+@app.route('/nodes')
+def list_nodes():
+    return node_controller.list_nodes()
+
+
 # app.run(host = '0.0.0.0', port = 5000)
 
 if __name__ == '__main__':
     if sys.argv is not None and sys.argv[1] is not None:
-        app.run(host='0.0.0.0', port=int(sys.argv[1]))
+        port = int(sys.argv[1])
+        app.run(host = '0.0.0.0', port = port)
     else:
-        app.run(host='0.0.0.0', port=5000)
+        port = int(sys.argv[1])
+        app.run(host = '0.0.0.0', port = 5000)
+
+    my_node = Node(
+        address = "node-" + str(port),
+        url = "localhost:" + str(port)
+    )
+    my_node_repository.update_my_node(my_node)

@@ -3,8 +3,10 @@ from flask.json import jsonify
 
 
 class NodeWs:
-    @classmethod
-    def send_new_transaction_to_node(node, transaction):
-        payload = jsonify(transaction)
-        response = requests.post(node, data = payload)
+    def __init__(self):
+        self.http = requests
+
+    def send_node(self, target_node, sending_node):
+        payload = jsonify(sending_node)
+        response = self.http.post(target_node + '/nodes', data = payload)
         return response.status_code
