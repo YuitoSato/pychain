@@ -1,3 +1,4 @@
+import os
 import sys
 
 from flask import Flask, request
@@ -7,6 +8,7 @@ from app.controllers.mining_controller import MiningController
 from app.controllers.my_node_controller import MyNodeController
 from app.controllers.node_controller import NodeController
 from app.controllers.unconfirmed_transaction_controller import UnconfirmedTransactionController
+from app.infrastructure.ws.block_ws import BlockWs
 from app.models.block import Block
 from app.models.node import Node
 from app.repositories.blockchain_repository import BlockchainRepository
@@ -20,10 +22,9 @@ from app.services.node_service import NodeService
 from app.services.unconfirmed_transaction_service import UnconfirmedTransactionService
 from app.utils.hash_converter import HashConverter
 from app.utils.pychain_encoder import PychainEncoder
-from app.ws.block_ws import BlockWs
-from app.ws.node_ws import NodeWs
+from app.infrastructure.ws.node_ws import NodeWs
 
-app = Flask(__name__)
+app = Flask(__name__, instance_relative_config = True)
 app.json_encoder = PychainEncoder
 
 node_address = "node_address"
@@ -135,6 +136,9 @@ if __name__ == '__main__':
     else:
         port = int(sys.argv[1])
         app.run(host = '0.0.0.0', port = 5000)
+
+    print(app.config.from_pyfile('instance/config.py')['HOGE'])
+
 
     my_node = Node(
         address = "node-" + str(port),

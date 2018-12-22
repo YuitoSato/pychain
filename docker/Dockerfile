@@ -1,16 +1,14 @@
-FROM python:3.6
+FROM base_pychain-base
 
 ENV LANG C.UTF-8
 
 ARG project_dir=/usr/src/app/
-ARG port="5001"
-ENV port=$port
 
-COPY * $project_dir
-
+ADD * $project_dir
 WORKDIR $project_dir
-RUN pip install -r requirements.txt
 
-EXPOSE $port
+ARG node_number
+ENV node_number=$node_number
 
-CMD python app.py ${port}
+RUN chmod +x docker-entrypoint.sh
+ENTRYPOINT "docker/docker-entrypoint.sh" $node_number

@@ -1,0 +1,6 @@
+version: "3"
+services:
+  pychain-base:
+    build:
+      context: "../../"
+      dockerfile: "docker/base/Dockerfile"

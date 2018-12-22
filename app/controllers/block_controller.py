@@ -14,5 +14,3 @@ class BlockController:
     def verify_block(self, request):
         block_from_peer = decode_block(request)
         self.block_service.verify_block(block_from_peer)
-
-
