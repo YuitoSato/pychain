@@ -1,7 +1,7 @@
 from sqlalchemy import Column, BigInteger, Integer, ForeignKey, String
 from sqlalchemy.orm import relationship
 
-from app.infrastructure.rdb.mysql.db_conf import DbConf
+from app.infrastructure.rdb.sqlite.db_conf import DbConf
 
 
 class Block(DbConf.Base):
