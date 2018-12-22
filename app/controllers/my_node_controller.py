@@ -1,6 +1,6 @@
 from flask.json import jsonify
 
-from app.models.node import Node
+from app.models.peer_node import PeerNode
 
 
 class MyNodeController:
@@ -9,7 +9,7 @@ class MyNodeController:
 
     def update_my_node(self, request):
         values = request.get_json()
-        node = Node(url = request.host, address = values['address'])
+        node = PeerNode(url = request.host, address = values['address'])
         self.my_node_service.update_my_node(node)
         return jsonify({}), 200
 

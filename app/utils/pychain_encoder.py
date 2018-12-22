@@ -1,7 +1,7 @@
 from json import JSONEncoder
 
 from app.models.block import Block
-from app.models.node import Node
+from app.models.peer_node import PeerNode
 from app.models.transaction import Transaction
 
 
@@ -22,7 +22,7 @@ class PychainEncoder(JSONEncoder):
                 'recipient_address': o.recipient_address,
                 'amount': o.amount,
             }
-        if isinstance(o, Node):
+        if isinstance(o, PeerNode):
             return {
                 'url': o.url,
                 'address': o.address

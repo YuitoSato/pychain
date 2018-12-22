@@ -10,7 +10,7 @@ from app.controllers.node_controller import NodeController
 from app.controllers.unconfirmed_transaction_controller import UnconfirmedTransactionController
 from app.infrastructure.ws.block_ws import BlockWs
 from app.models.block import Block
-from app.models.node import Node
+from app.models.peer_node import PeerNode
 from app.repositories.blockchain_repository import BlockchainRepository
 from app.repositories.my_node_repository import MyNodeRepository
 from app.repositories.node_repository import NodeRepository
@@ -30,7 +30,7 @@ app.json_encoder = PychainEncoder
 node_address = "node_address"
 hash_converter = HashConverter(encoder = PychainEncoder)
 
-my_node = Node(
+my_node = PeerNode(
     url = "localhost:5000",
     address = "yuito-node"
 )
@@ -140,7 +140,7 @@ if __name__ == '__main__':
     print(app.config.from_pyfile('instance/config.py')['HOGE'])
 
 
-    my_node = Node(
+    my_node = PeerNode(
         address = "node-" + str(port),
         url = "localhost:" + str(port)
     )
