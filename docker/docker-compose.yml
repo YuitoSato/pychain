@@ -17,6 +17,7 @@ services:
       FLASK_APP: './app.py'
     networks:
       - app-net
+    tty: true
 
   pychain-node2:
     container_name: "pychain-node2"
@@ -35,7 +36,7 @@ services:
       FLASK_APP: './app.py'
     networks:
       - app-net
-
+    tty: true
 
   pychain-node3:
     container_name: "pychain-node3"
@@ -54,6 +55,7 @@ services:
       FLASK_APP: './app.py'
     networks:
       - app-net
+    tty: true
 
 networks:
   app-net:

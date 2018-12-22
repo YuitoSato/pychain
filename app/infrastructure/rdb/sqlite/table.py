@@ -1,5 +1,4 @@
-from sqlalchemy import Column, BigInteger, Integer, ForeignKey, String
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, BigInteger, Integer, ForeignKey, String, Float, Text
 
 from app.infrastructure.rdb.sqlite.db_conf import DbConf
 
@@ -9,8 +8,6 @@ class Block(DbConf.Base):
     block_id = Column(BigInteger, primary_key = True, autoincrement = False)
     block_size = Column(Integer, nullable = False)
     transaction_counter = Column(Integer, nullable = False)
-
-    block_headers = relationship("BlockHeader", backref = "blocks", order_by = "BlockHeader.block_header_id")
 
 
 class BlockHeader(DbConf.Base):
@@ -38,6 +35,34 @@ class TransactionConfirmation(DbConf.Base):
     transaction_confirmation_id = Column(BigInteger, primary_key = True, autoincrement = False)
     block_id = Column(BigInteger, ForeignKey('blocks.block_id'))
     transaction_id = Column(BigInteger, ForeignKey('transactions.transaction_id'))
+
+
+class TransactionOutput(DbConf.Base):
+    __tablename__ = "transaction_outputs"
+    transaction_output_id = Column(BigInteger, primary_key = True, autoincrement = False)
+    transaction_id = Column(BigInteger, ForeignKey('transactions.transaction_id'))
+    amount = Column(Float(asdecimal = True), nullable = False)
+    locking_script_size = Column(BigInteger, nullable = False)
+    locking_script = Column(Text, nullable = False)
+    sender_address = Column(String(length = 64), nullable = False)
+    recipient_address = Column(String(length = 64), nullable = False)
+
+
+class TransactionInputs(DbConf.Base):
+    __tablename__ = "transaction_inputs"
+    transaction_input_id = Column(BigInteger, primary_key = True, autoincrement = False)
+    transaction_id = Column(BigInteger, ForeignKey('transactions.transaction_id'))
+    transaction_output_id = Column(BigInteger, ForeignKey('transaction_outputs.transaction_output_id'))
+    output_index = Column(Integer, nullable = False)
+    unlocking_script_size = Column(BigInteger, nullable = False)
+    unlocking_script = Column(Text, nullable = False)
+
+
+class PeerNode(DbConf.Base):
+    __tablename__ = "peer_nodes"
+    peer_node_id = Column(BigInteger, primary_key = True, autoincrement = False)
+    uri = Column(String(length = 64), nullable = False)
+    address = Column(String(length = 64), nullable = False)
 
 
 def main():
