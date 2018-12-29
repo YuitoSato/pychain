@@ -1,3 +1,4 @@
+pycrypto
 sqlalchemy==1.2.15
 requests
 Flask==1.0.2

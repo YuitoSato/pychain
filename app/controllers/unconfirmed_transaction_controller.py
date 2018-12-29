@@ -1,5 +1,3 @@
-from time import time
-
 from flask.json import jsonify
 
 from app.models.transaction import Transaction
@@ -10,14 +8,22 @@ class UnconfirmedTransactionController:
         self.unconfirmed_transaction_service = unconfirmed_transaction_service
         self.hash_converter = hash_converter
 
+    # {
+    #   sender_address: string
+    #   recipient_address: string,
+    #   amount: integer,
+    #   transaction_inputs: [
+    #     {
+    #        transaction_input_id: integer,
+    #        unlocking_script: string
+    #     }
+    #   ]
+    # }
     def create_transaction(self, request):
-        values = request.get_json()
-        request_str = (str(time()) + str(values)).encode('utf-8')
-        transaction_hash = self.hash_converter.hash(request_str)
-        transaction = Transaction(transaction_hash, values['sender'], values['recipient'], values['amount'])
-        index = self.unconfirmed_transaction_service.create_transaction(transaction)
-        response = { 'message': f'Transaction will be added to Block {index}' }
-        return jsonify(response), 201
+        self.unconfirmed_transaction_service.create_transaction(
+            request.get_json()
+        )
+        return jsonify({ }), 201
 
     def list_unconfirmed_transactions(self):
         unconfirmed_transactions = self.unconfirmed_transaction_service.list_unconfirmed_transactions()

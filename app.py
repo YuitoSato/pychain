@@ -1,5 +1,5 @@
-import os
 import sys
+import uuid
 
 from flask import Flask, request
 
@@ -8,7 +8,10 @@ from app.controllers.mining_controller import MiningController
 from app.controllers.my_node_controller import MyNodeController
 from app.controllers.node_controller import NodeController
 from app.controllers.unconfirmed_transaction_controller import UnconfirmedTransactionController
+from app.infrastructure.rdb.sqlite.repositories.transaction_output_repository_rdb import TransactionOutputRepositoryRDB
+from app.infrastructure.rdb.sqlite.repositories.transaction_repository_rdb import TransactionRepositoryRDB
 from app.infrastructure.ws.block_ws import BlockWs
+from app.infrastructure.ws.node_ws import NodeWs
 from app.models.block import Block
 from app.models.peer_node import PeerNode
 from app.repositories.blockchain_repository import BlockchainRepository
@@ -22,7 +25,6 @@ from app.services.node_service import NodeService
 from app.services.unconfirmed_transaction_service import UnconfirmedTransactionService
 from app.utils.hash_converter import HashConverter
 from app.utils.pychain_encoder import PychainEncoder
-from app.infrastructure.ws.node_ws import NodeWs
 
 app = Flask(__name__, instance_relative_config = True)
 app.json_encoder = PychainEncoder
@@ -31,6 +33,7 @@ node_address = "node_address"
 hash_converter = HashConverter(encoder = PychainEncoder)
 
 my_node = PeerNode(
+    peer_node_id = uuid.uuid1().int,
     url = "localhost:5000",
     address = "yuito-node"
 )
@@ -40,6 +43,8 @@ blockchain_repository = BlockchainRepository(genesis_block = Block.genesis_block
 unconfirmed_transaction_repository = UnconfirmedTransactionRepository()
 node_repository = NodeRepository()
 my_node_repository = MyNodeRepository(node = my_node)
+transaction_repository = TransactionRepositoryRDB
+transaction_output_repository = TransactionOutputRepositoryRDB
 
 # WS
 block_ws = BlockWs()
@@ -57,7 +62,9 @@ mining_service = MiningService(
 )
 unconfirmed_transaction_service = UnconfirmedTransactionService(
     unconfirmed_transaction_repository = unconfirmed_transaction_repository,
-    blockchain_repository = blockchain_repository
+    blockchain_repository = blockchain_repository,
+    transaction_output_repository = transaction_output_repository,
+    transaction_repository = transaction_repository
 )
 block_service = BlockService(
     blockchain_repository = blockchain_repository,
@@ -127,8 +134,6 @@ def list_nodes():
     return node_controller.list_nodes()
 
 
-# app.run(host = '0.0.0.0', port = 5000)
-
 if __name__ == '__main__':
     if sys.argv is not None and sys.argv[1] is not None:
         port = int(sys.argv[1])
@@ -138,10 +143,3 @@ if __name__ == '__main__':
         app.run(host = '0.0.0.0', port = 5000)
 
     print(app.config.from_pyfile('instance/config.py')['HOGE'])
-
-
-    my_node = PeerNode(
-        address = "node-" + str(port),
-        url = "localhost:" + str(port)
-    )
-    my_node_repository.update_my_node(my_node)
