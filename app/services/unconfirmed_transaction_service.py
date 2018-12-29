@@ -2,17 +2,16 @@ import uuid
 from functools import reduce
 
 from app.infra.sqlite.db_conf import DbConf
+from app.infra.sqlite.transaction_db import TransactionDb
+from app.infra.sqlite.transaction_output_db import TransactionOutputDb
 from app.models.transaction import Transaction
 from app.models.transaction_output import TransactionOutput
 
 
 class UnconfirmedTransactionService:
-    def __init__(self, unconfirmed_transaction_repository, blockchain_repository, transaction_output_repository,
-        transaction_repository):
+    def __init__(self, unconfirmed_transaction_repository, blockchain_repository):
         self.unconfirmed_transaction_repository = unconfirmed_transaction_repository
         self.blockchain_repository = blockchain_repository
-        self.transaction_repository = transaction_repository
-        self.transaction_output_repository = transaction_output_repository
 
     # {
     #   sender_address: string
@@ -25,14 +24,15 @@ class UnconfirmedTransactionService:
     #     }
     #   ]
     # }
-    def create_transaction(self, request):
+    @classmethod
+    def create_transaction(cls, request):
         transaction_inputs = request['transaction_inputs']
         sender_address = request['sender_address']
         recipient_address = request['recipient_address']
         request_amount = request['amount']
 
         transaction_inputs = list(map(
-            lambda transaction_input: self.transaction_output_repository.find(
+            lambda transaction_input: TransactionOutputDb.find(
                 transaction_input['transaction_output_id']
             ).to_input(), transaction_inputs
         ))
@@ -86,7 +86,7 @@ class UnconfirmedTransactionService:
             locktime = 0
         )
 
-        self.transaction_repository.create_transaction(DbConf.session, transaction)
+        TransactionDb.create_transaction(DbConf.session, transaction)
         DbConf.session.commit()
 
     def list_unconfirmed_transactions(self):

@@ -8,8 +8,6 @@ from app.controllers.mining_controller import MiningController
 from app.controllers.my_node_controller import MyNodeController
 from app.controllers.node_controller import NodeController
 from app.controllers.unconfirmed_transaction_controller import UnconfirmedTransactionController
-from app.infra.sqlite import TransactionOutputRepositoryRDB
-from app.infra.sqlite import TransactionRepositoryRDB
 from app.infra.ws.block_ws import BlockWs
 from app.infra.ws.node_ws import NodeWs
 from app.models.block import Block
@@ -43,8 +41,6 @@ blockchain_repository = BlockchainRepository(genesis_block = Block.genesis_block
 unconfirmed_transaction_repository = UnconfirmedTransactionRepository()
 node_repository = NodeRepository()
 my_node_repository = MyNodeRepository(node = my_node)
-transaction_repository = TransactionRepositoryRDB
-transaction_output_repository = TransactionOutputRepositoryRDB
 
 # WS
 block_ws = BlockWs()
@@ -62,9 +58,7 @@ mining_service = MiningService(
 )
 unconfirmed_transaction_service = UnconfirmedTransactionService(
     unconfirmed_transaction_repository = unconfirmed_transaction_repository,
-    blockchain_repository = blockchain_repository,
-    transaction_output_repository = transaction_output_repository,
-    transaction_repository = transaction_repository
+    blockchain_repository = blockchain_repository
 )
 block_service = BlockService(
     blockchain_repository = blockchain_repository,
