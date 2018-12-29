@@ -8,10 +8,10 @@ from app.controllers.mining_controller import MiningController
 from app.controllers.my_node_controller import MyNodeController
 from app.controllers.node_controller import NodeController
 from app.controllers.unconfirmed_transaction_controller import UnconfirmedTransactionController
-from app.infrastructure.rdb.sqlite.repositories.transaction_output_repository_rdb import TransactionOutputRepositoryRDB
-from app.infrastructure.rdb.sqlite.repositories.transaction_repository_rdb import TransactionRepositoryRDB
-from app.infrastructure.ws.block_ws import BlockWs
-from app.infrastructure.ws.node_ws import NodeWs
+from app.infra.sqlite import TransactionOutputRepositoryRDB
+from app.infra.sqlite import TransactionRepositoryRDB
+from app.infra.ws.block_ws import BlockWs
+from app.infra.ws.node_ws import NodeWs
 from app.models.block import Block
 from app.models.peer_node import PeerNode
 from app.repositories.blockchain_repository import BlockchainRepository

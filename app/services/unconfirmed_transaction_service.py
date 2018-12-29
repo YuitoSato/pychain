@@ -1,7 +1,7 @@
 import uuid
 from functools import reduce
 
-from app.infrastructure.rdb.sqlite.db_conf import DbConf
+from app.infra.sqlite.db_conf import DbConf
 from app.models.transaction import Transaction
 from app.models.transaction_output import TransactionOutput
 
