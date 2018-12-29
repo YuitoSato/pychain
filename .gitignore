@@ -4,4 +4,4 @@ __pycache__/
 .python-version
 sqlite/
 
-*_key
+*_key*.txt
