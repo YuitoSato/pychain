@@ -17,7 +17,12 @@ insert into transaction_outputs(
   1,
   1,
   1000000000,
-  '',
+  'àähIö9f&E½çÖ´]¸Í1ÁàäÎtjí+åãJó:ö»o''ÞL@ÂÚrEk5
+hÛë''tU£îj£])ÈÎdóá@Làâ*=a±§;q3x¤Üi<\¾t ÑÎy¥&e<\Ú÷OL%0þÌÔ ¡ud1û¨Fîu5tÞ¤`³î¯bpéÕt,1DÒ5nì4$
+Úê9Ûåi	ÚLxDbµá
+ äºc<×ULí!Ý©LÏÜözNH¡³hÿc9ÕõÚ²À(
+þ$?=G1I³¶çÄÈ
+',
   'coinbase',
   '-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAznjoHvzCJtQcIYd3yj7v

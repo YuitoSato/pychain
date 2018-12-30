@@ -6,7 +6,12 @@ from Crypto.Hash import SHA256
 from base64 import b64decode, b64encode
 import sys
 
+from app.scripts.lock import get_public_key
+
 SECRET_KEY_PATH = './secret_key.txt'
+
+get_public_key()
+
 
 def sign(secret_key, data, passphrase = None):
     try:
@@ -21,12 +26,14 @@ def sign(secret_key, data, passphrase = None):
     digest.update(b64decoded)
 
     sign = signer.sign(digest)
-    return b64encode(sign)
+    return b64encode(sign).decode('utf-8')
+
 
 def get_secret_key():
     with open(SECRET_KEY_PATH) as f:
         s = f.read()
         return s.encode('utf-8')
+
 
 if __name__ == '__main__':
     data = sys.argv[1]
