@@ -7,7 +7,7 @@ from app.controllers.block_controller import BlockController
 from app.controllers.mining_controller import MiningController
 from app.controllers.my_node_controller import MyNodeController
 from app.controllers.node_controller import NodeController
-from app.controllers.unconfirmed_transaction_controller import UnconfirmedTransactionController
+# from app.controllers.unconfirmed_transaction_controller import UnconfirmedTransactionController
 from app.infra.sqlite.database import init_db
 from app.infra.ws.block_ws import BlockWs
 from app.infra.ws.node_ws import NodeWs
@@ -21,7 +21,7 @@ from app.services.block_service import BlockService
 from app.services.mining_service import MiningService
 from app.services.my_node_service import MyNodeService
 from app.services.node_service import NodeService
-from app.services.unconfirmed_transaction_service import UnconfirmedTransactionService
+# from app.services.unconfirmed_transaction_service import UnconfirmedTransactionService
 from app.utils.hash_converter import HashConverter
 from app.utils.pychain_encoder import PychainEncoder
 
@@ -68,10 +68,10 @@ mining_service = MiningService(
     node_repository = node_repository,
     block_ws = block_ws
 )
-unconfirmed_transaction_service = UnconfirmedTransactionService(
-    unconfirmed_transaction_repository = unconfirmed_transaction_repository,
-    blockchain_repository = blockchain_repository
-)
+# unconfirmed_transaction_service = UnconfirmedTransactionService(
+#     unconfirmed_transaction_repository = unconfirmed_transaction_repository,
+#     blockchain_repository = blockchain_repository
+# )
 block_service = BlockService(
     blockchain_repository = blockchain_repository,
     block_ws = block_ws,
@@ -85,10 +85,10 @@ my_node_service = MyNodeService(
 node_service = NodeService(node_repository)
 
 # Controllers
-unconfirmed_transaction_controller = UnconfirmedTransactionController(
-    unconfirmed_transaction_service = unconfirmed_transaction_service,
-    hash_converter = hash_converter
-)
+# unconfirmed_transaction_controller = UnconfirmedTransactionController(
+#     unconfirmed_transaction_service = unconfirmed_transaction_service,
+#     hash_converter = hash_converter
+# )
 mining_controller = MiningController(mining_service = mining_service)
 block_controller = BlockController(block_service = block_service)
 my_node_controller = MyNodeController(my_node_service = my_node_service)
@@ -100,14 +100,14 @@ def hello_world():
     return 'Hello World!!!!'
 
 
-@app.route('/transactions', methods = ['POST'])
-def create_transaction():
-    return unconfirmed_transaction_controller.create_transaction(request)
-
-
-@app.route('/transactions/unconfirmed')
-def list_current_transactions():
-    return unconfirmed_transaction_controller.list_unconfirmed_transactions()
+# @app.route('/transactions', methods = ['POST'])
+# def create_transaction():
+#     return unconfirmed_transaction_controller.create_transaction(request)
+#
+#
+# @app.route('/transactions/unconfirmed')
+# def list_current_transactions():
+#     return unconfirmed_transaction_controller.list_unconfirmed_transactions()
 
 
 @app.route('/mine')
@@ -147,3 +147,5 @@ if __name__ == '__main__':
     else:
         port = int(sys.argv[1])
         app.run(host = '0.0.0.0', port = 5000)
+
+    print(app.config.from_pyfile('instance/config.py')['HOGE'])

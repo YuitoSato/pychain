@@ -2,7 +2,7 @@ insert into transactions(
 	transaction_id,
 	locktime
 ) values (
-	1,
+	'1',
 	0
 );
 
@@ -14,8 +14,8 @@ insert into transaction_outputs(
 	sender_address,
 	recipient_address
 ) values (
-  1,
-  1,
+  '1',
+  '1',
   1000000000,
   'àähIö9f&E½çÖ´]¸Í1ÁàäÎtjí+åãJó:ö»o''ÞL@ÂÚrEk5
 hÛë''tU£îj£])ÈÎdóá@Làâ*=a±§;q3x¤Üi<\¾t ÑÎy¥&e<\Ú÷OL%0þÌÔ ¡ud1û¨Fîu5tÞ¤`³î¯bpéÕt,1DÒ5nì4$

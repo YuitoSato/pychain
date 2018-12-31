@@ -7,7 +7,7 @@ insert into blocks(
 	difficulty_target,
 	nonce
 ) values (
-	1,
+	'1',
 	'1',
 	'1',
 	1,
@@ -21,7 +21,7 @@ insert into  transaction_confirmations (
 	block_id,
 	transaction_id
 ) values (
-	1,
-	1,
-	1
+	'1',
+	'1',
+	'1'
 );

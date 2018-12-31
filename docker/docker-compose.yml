@@ -9,12 +9,13 @@ services:
         node_number: "1"
     volumes:
       - ../:/usr/src/app/
-      - conf1:/usr/src/app/app/conf
+      - node1:/usr/src/app/app/conf
+
     ports:
       - "5001:5001"
     environment:
       FLASK_DEBUG: 1
-      FLASK_APP: './app.py'
+      FLASK_APP: './entrypoint.py'
     networks:
       - app-net
     tty: true
@@ -28,12 +29,14 @@ services:
         node_number: "2"
     volumes:
       - ../:/usr/src/app/
-      - conf2:/usr/src/app/app/conf
+      - node2:/usr/src/app/app/conf
+
+
     ports:
       - "5002:5002"
     environment:
       FLASK_DEBUG: 1
-      FLASK_APP: './app.py'
+      FLASK_APP: './entrypoint.py'
     networks:
       - app-net
     tty: true
@@ -47,12 +50,13 @@ services:
         node_number: "3"
     volumes:
       - ../:/usr/src/app/
-      - conf3:/usr/src/app/app/conf
+      - node3:/usr/src/app/app/conf
+
     ports:
       - "5003:5003"
     environment:
       FLASK_DEBUG: 1
-      FLASK_APP: './app.py'
+      FLASK_APP: './entrypoint.py'
     networks:
       - app-net
     tty: true
@@ -62,6 +66,6 @@ networks:
     driver: bridge
 
 volumes:
-  conf1: {}
-  conf2: {}
-  conf3: {}
+  node1: {}
+  node2: {}
+  node3: {}

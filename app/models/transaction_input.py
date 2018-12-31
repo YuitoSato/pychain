@@ -13,10 +13,12 @@ class TransactionInput:
         self.amount = amount
         self.unlocking_script = unlocking_script
 
-    def verify(self, pubkey, locking_script):
-        rsakey = RSA.importKey(pubkey)
+    def verify(self, pubkey):
+        rsakey = RSA.importKey(pubkey.encode('utf-8'))
         signer = PKCS1_v1_5.new(rsakey)
         digest = SHA256.new()
-        digest.update(b64decode(str(self.transaction_output_id)))
+        output_id_str = str(self.transaction_output_id)
+        data = output_id_str + ('/' * (-len(str(output_id_str)) % 4))
+        digest.update(b64decode(data))
 
-        return signer.verify(digest, b64decode(locking_script))
+        return signer.verify(digest, b64decode(self.unlocking_script))

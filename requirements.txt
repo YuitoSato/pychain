@@ -1,4 +1,5 @@
 pycryptodome
+flask-migrate
 sqlalchemy==1.2.15
 flask-sqlalchemy==2.3.2
 requests

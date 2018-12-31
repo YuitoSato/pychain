@@ -1,0 +1,1 @@
+COINBASE_ADDRESS = 'coinbase_address'
