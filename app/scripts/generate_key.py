@@ -2,8 +2,8 @@ from base64 import b64encode
 
 from Crypto.PublicKey import RSA
 
-SECRET_KEY_PATH = './secret_key2.txt'
-PUBLIC_KEY_PATH = './public_key2.txt'
+SECRET_KEY_PATH = './secret_key3.txt'
+PUBLIC_KEY_PATH = './public_key3.txt'
 
 
 def generate_key(keysize = 2048, passphrase = None):

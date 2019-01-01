@@ -10,4 +10,7 @@ FLASK_APP=run.py flask db migrate
 FLASK_APP=run.py flask db upgrade
 
 sqlite3 sqlite/pychain_db_$1.sqlite3 < docker/genesis_transaction.sql
+sqlite3 sqlite/pychain_db_$1.sqlite3 < docker/genesis_block.sql
+sqlite3 sqlite/pychain_db_$1.sqlite3 < docker/set_local_peer_node.sql
+
 python -u entrypoint.py 500$1

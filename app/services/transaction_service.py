@@ -10,9 +10,6 @@ from app.utils.constants import COINBASE_ADDRESS
 
 
 class TransactionService:
-    def __init__(self, db):
-        self.db = db
-
     # {
     #   sender_address: string
     #   recipient_address: string,
@@ -24,7 +21,8 @@ class TransactionService:
     #     }
     #   ]
     # }
-    def create_transaction(self, request):
+    @classmethod
+    def create_transaction(cls, request):
         transaction_inputs_r = request['transaction_inputs']
         sender_address = request['sender_address']
         recipient_address = request['recipient_address']
@@ -88,3 +86,10 @@ class TransactionService:
 
         TransactionDb.create_transaction(session, transaction)
         session.commit()
+
+        return transaction_id
+
+    @classmethod
+    def assert_new_transaction(cls, transaction_id):
+        transaction = TransactionDb.find(transaction_id)
+        return transaction is not None

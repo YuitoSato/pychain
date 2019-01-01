@@ -48,9 +48,8 @@ class TestTransactionService(TestCase):
                 }
             ]
         }
-        service = TransactionService(db)
 
-        service.create_transaction(request)
+        TransactionService.create_transaction(request)
 
         results = TransactionOutputDb.list(db.session)
         self.assertEqual(len(results), 4)

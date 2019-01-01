@@ -3,11 +3,11 @@ import uuid
 
 from flask import Flask, request
 
+from app.controllers.transaction_controller import TransactionController
 from app.controllers.block_controller import BlockController
 from app.controllers.mining_controller import MiningController
 from app.controllers.my_node_controller import MyNodeController
 from app.controllers.node_controller import NodeController
-# from app.controllers.unconfirmed_transaction_controller import UnconfirmedTransactionController
 from app.infra.sqlite.database import init_db
 from app.infra.ws.block_ws import BlockWs
 from app.infra.ws.node_ws import NodeWs
@@ -21,12 +21,10 @@ from app.services.block_service import BlockService
 from app.services.mining_service import MiningService
 from app.services.my_node_service import MyNodeService
 from app.services.node_service import NodeService
-# from app.services.unconfirmed_transaction_service import UnconfirmedTransactionService
+from app.services.transaction_service import TransactionService
 from app.utils.hash_converter import HashConverter
 from app.utils.pychain_encoder import PychainEncoder
 
-
-import app.infra.sqlite
 
 def create_app():
     app = Flask(__name__)
@@ -100,10 +98,10 @@ def hello_world():
     return 'Hello World!!!!'
 
 
-# @app.route('/transactions', methods = ['POST'])
-# def create_transaction():
-#     return unconfirmed_transaction_controller.create_transaction(request)
-#
+@app.route('/transactions', methods = ['POST'])
+def create_transaction():
+    return TransactionController.create_transaction(request)
+
 #
 # @app.route('/transactions/unconfirmed')
 # def list_current_transactions():
