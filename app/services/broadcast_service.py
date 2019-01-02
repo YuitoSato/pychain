@@ -21,10 +21,11 @@ class BroadcastService:
     def broadcast_block(cls, block, proof_result):
         nodes = PeerNode.list()
 
+        node_number = app.config['NODE_NUMBER']
         payload = {
             'block': block,
             'proof_result': proof_result,
-            'sender_node_adderss': 'http://pychain-node' + app.config['NODE_NUMBER'] + '500' + app.config['NODE_NUMBER']
+            'sender_node_address': 'http://pychain-node' + '1' + ':500' + node_number
         }
 
         for node in nodes:

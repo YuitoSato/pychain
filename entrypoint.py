@@ -52,7 +52,7 @@ def list_current_transactions():
 
 @app.route('/blocks/mine')
 def create_block():
-    return BlockController.create_block()
+    return BlockController.create_block(request.host)
 
 
 @app.route('/blocks/receive', methods = ['POST'])
