@@ -95,3 +95,7 @@ class TransactionService:
     def assert_new_transaction(cls, transaction_id):
         transactions = list(filter(lambda tx: tx.transaction_id == transaction_id, UnconfirmedTransactionPool.transactions))
         return len(transactions) == 0
+
+    @classmethod
+    def receive_tansaction(cls, transaction):
+        UnconfirmedTransactionPool.transactions.append(transaction)

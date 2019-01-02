@@ -11,13 +11,13 @@ from app.utils.pychain_encoder import PychainEncoder
 
 
 def create_app():
-    app = Flask(__name__)
-    app.config.from_pyfile('app/conf/config.py')
+    _app = Flask(__name__)
+    _app.config.from_pyfile('app/conf/config.py')
 
-    init_db(app)
-    app.json_encoder = PychainEncoder
+    init_db(_app)
+    _app.json_encoder = PychainEncoder
 
-    return app
+    return _app
 
 
 app = create_app()
@@ -31,6 +31,7 @@ my_node = PeerNode(
 
 @app.route('/')
 def hello_world():
+    print(request.remote_addr)
     return 'Hello World!!!!'
 
 
@@ -67,27 +68,6 @@ def list_blocks():
 @app.route('/blocks/<block_number>')
 def find_by_block_number(block_number):
     return BlockController.find_by_block_number(block_number)
-
-
-#
-# @app.route('/my-node', methods = ['POST'])
-# def update_my_node():
-#     return my_node_controller.update_my_node(request)
-#
-#
-# @app.route('/my-node')
-# def find_my_node():
-#     return my_node_controller.find_my_node()
-#
-#
-# @app.route('/nodes', methods = ['POST'])
-# def create_node():
-#     return node_controller.create_node(request)
-#
-#
-# @app.route('/nodes')
-# def list_nodes():
-#     return node_controller.list_nodes()
 
 
 if __name__ == '__main__':

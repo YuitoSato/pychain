@@ -4,13 +4,6 @@ from app.models.peer_node import PeerNode
 
 
 class NodeController:
-    def __init__(self, node_service):
-        self.node_service = node_service
-
-    def list_nodes(self):
-        nodes = self.node_service.list_nodes()
-        return jsonify(nodes), 200
-
     def create_node(self, request):
         values = request.get_json()
         node = PeerNode(

@@ -4,22 +4,18 @@ import requests
 
 from app.infra.sqlite import PeerNode
 from app.utils.pychain_encoder import PychainEncoder
+from entrypoint import app
 
 
 class BroadcastService:
     HEADERS = { 'content-type': 'application/json' }
 
     @classmethod
-    def broadcast_transaction(cls, transaction_request, transaction_id):
+    def broadcast_transaction(cls, transaction):
         nodes = PeerNode.list()
 
-        payload = {
-            'transaction_id': transaction_id,
-            'transaction_request': transaction_request
-        }
-
         for node in nodes:
-            requests.post(node.url + '/transactions/receive', data = json.dumps(payload), headers = cls.HEADERS)
+            requests.post(node.url + '/transactions/receive', data = json.dumps(transaction, cls = PychainEncoder), headers = cls.HEADERS)
 
     @classmethod
     def broadcast_block(cls, block, proof_result):
@@ -27,7 +23,8 @@ class BroadcastService:
 
         payload = {
             'block': block,
-            'proof_result': proof_result
+            'proof_result': proof_result,
+            'sender_node_adderss': 'http://pychain-node' + app.config['NODE_NUMBER'] + '500' + app.config['NODE_NUMBER']
         }
 
         for node in nodes:
