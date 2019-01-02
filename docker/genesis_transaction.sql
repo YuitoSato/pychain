@@ -1,7 +1,9 @@
 insert into transactions(
 	transaction_id,
+	block_id,
 	locktime
 ) values (
+	'f1534392279bddbf9d43dde8701cb5be14b82f76ec6607bf8d6ad557f60f304e',
 	'1',
 	0
 );
@@ -14,7 +16,7 @@ insert into transaction_outputs(
 	sender_address,
 	recipient_address
 ) values (
-  '1',
+  'd5b750651056f0f3f23eeda5187ef9e5e22be209e0921ca526957669d315c405',
   '1',
   1000000000,
   'àähIö9f&E½çÖ´]¸Í1ÁàäÎtjí+åãJó:ö»o''ÞL@ÂÚrEk5

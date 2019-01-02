@@ -1,5 +1,6 @@
 insert into blocks(
 	block_id,
+	block_number,
 	version,
 	previous_block_hash,
 	timestamp,
@@ -8,20 +9,11 @@ insert into blocks(
 	nonce
 ) values (
 	'1',
+	1,
 	'1',
 	'1',
 	1,
 	'',
 	10,
 	1
-);
-
-insert into  transaction_confirmations (
-	transaction_confirmation_id,
-	block_id,
-	transaction_id
-) values (
-	'1',
-	'1',
-	'1'
 );

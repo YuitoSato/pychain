@@ -4,7 +4,7 @@ insert into peer_nodes(
   address
 ) values (
   '1',
-  'http://localhost:5001',
+  'http://pychain-node1:5001',
   '-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JL8ek8HCgS6yvTSjog/
 pfB7vc693fB1AA+8kBRchj51ktejPrR5mRpoMJwzBcgal9sAgLjj1gOa9pLReCfT
@@ -22,7 +22,7 @@ insert into peer_nodes(
   address
 ) values (
   '2',
-  'http://localhost:5002',
+  'http://pychain-node2:5002',
   '-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnrb17FTtrgfg33ADcbc
 b2D7mGX+sBIn6jE24ADNKbAvqRuhonnBJxG5W21xMyfP43P4JS8Kb/e6MsdS0D5c
@@ -41,7 +41,7 @@ insert into peer_nodes(
   address
 ) values (
   '3',
-  'http://localhost:5003',
+  'http://pychain-node3:5003',
   '-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArb9KkrF/DTQJqiAcBUbK
 CaBmCl6bcueH1Oqyo62RKWbigalxBHdF2G7zoFWbIE7ko9hwK9CfcDIyeHcW4mFr

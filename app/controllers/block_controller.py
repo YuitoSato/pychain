@@ -1,16 +1,36 @@
 from flask import jsonify
 
-from app.utils.pychain_decorder import decode_block
+from app.services.block_service import BlockService
+from app.services.broadcast_service import BroadcastService
+from app.utils.pychain_decorder import decode_block, decode_proof_result
 
 
 class BlockController:
-    def __init__(self, block_service):
-        self.block_service = block_service
+    @classmethod
+    def list_blocks(cls):
+        return jsonify(BlockService.list_blocks()), 200
 
-    def list_blocks(self):
-        blocks = self.block_service.list_blocks()
-        return jsonify(blocks), 200
+    @classmethod
+    def create_block(cls):
+        block, proof_result = BlockService.create_block()
+        BroadcastService.broadcast_block(block, proof_result)
+        return jsonify({}), 200
 
-    def verify_block(self, request):
-        block_from_peer = decode_block(request)
-        self.block_service.verify_block(block_from_peer)
+    @classmethod
+    def receive_block(cls, request):
+        print('received block')
+        block = decode_block(request.get_json()['block'])
+        is_new = BlockService.assert_new_block(block.block_id)
+        if not is_new:
+            return jsonify({}), 304
+        print('start creating block...')
+        proof_result = decode_proof_result(request.get_json()['proof_result'])
+        BlockService.receive_block(block, proof_result, request.host)
+        BroadcastService.broadcast_block(block, proof_result)
+        print('broadcasted')
+
+        return jsonify({}), 200
+
+    @classmethod
+    def find_by_block_number(cls, block_number):
+        return jsonify(BlockService.find_by_block_number(block_number)), 200

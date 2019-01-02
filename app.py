@@ -8,7 +8,7 @@ from app.controllers.mining_controller import MiningController
 from app.controllers.my_node_controller import MyNodeController
 from app.controllers.node_controller import NodeController
 from app.controllers.unconfirmed_transaction_controller import UnconfirmedTransactionController
-from app.infra.sqlite.database import init_db
+from app.database.sqlite import init_db
 from app.infra.ws.block_ws import BlockWs
 from app.infra.ws.node_ws import NodeWs
 from app.models.block import Block
@@ -25,8 +25,6 @@ from app.services.unconfirmed_transaction_service import UnconfirmedTransactionS
 from app.utils.hash_converter import HashConverter
 from app.utils.pychain_encoder import PychainEncoder
 
-
-import app.infra.sqlite
 
 def create_app():
     app = Flask(__name__)

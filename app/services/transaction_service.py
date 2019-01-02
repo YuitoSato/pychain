@@ -1,11 +1,8 @@
-import uuid
 from functools import reduce
 
-from app.infra.sqlite.database import db
-from app.infra.sqlite.transaction_db import TransactionDb
-from app.infra.sqlite.transaction_output_db import TransactionOutputDb
-from app.models.transaction import Transaction
-from app.models.transaction_output import TransactionOutput
+from app.database.unconfirmed_transaction_pool import UnconfirmedTransactionPool
+from app.model.transaction import Transaction
+from app.model.transaction_output import TransactionOutput
 from app.utils.constants import COINBASE_ADDRESS
 
 
@@ -14,6 +11,7 @@ class TransactionService:
     #   sender_address: string
     #   recipient_address: string,
     #   amount: integer,
+    #   timestamp: integer,
     #   transaction_inputs: [
     #     {
     #        transaction_output_id: integer,
@@ -23,73 +21,77 @@ class TransactionService:
     # }
     @classmethod
     def create_transaction(cls, request):
-        transaction_inputs_r = request['transaction_inputs']
+        transaction_input_dicts = request['transaction_inputs']
         sender_address = request['sender_address']
         recipient_address = request['recipient_address']
-        request_amount = int(request['amount'])
+        request_amount = request['amount']
+        timestamp = request['timestamp']
 
-        session = db.session
+        unspent_transaction_outputs = list(filter(lambda tx_output: tx_output['tx_o'] is not None, list(map(
+            lambda tx_input: {
+                'tx_o': TransactionOutput.find_unspent(tx_input['transaction_output_id']),
+                'unlocking_script': tx_input['unlocking_script']
+            }, transaction_input_dicts
+        ))))
 
         transaction_inputs = list(map(
-            lambda transaction_input: TransactionOutputDb.find_unspent(
-                transaction_input['transaction_output_id']
-            ).to_input(transaction_input['unlocking_script']), transaction_inputs_r
+            lambda tx_output: tx_output['tx_o'].to_input(tx_output['unlocking_script']), unspent_transaction_outputs
         ))
-
-        transaction_inputs = list(filter(None, transaction_inputs))
 
         verify_results = list(map(lambda input: input.verify(sender_address), transaction_inputs))
         if False in verify_results:
             raise Exception('error.cant_verify_input')
 
-        transaction_input_amounts = list(map(lambda input: input.amount, transaction_inputs))
+        if len(transaction_inputs) == 0:
+            raise Exception('error.not_enough_input_amount')
+
+        transaction_input_amounts = list(map(lambda input: input.transaction_output.amount, transaction_inputs))
         transaction_input_amount_sum = reduce((lambda x, y: x + y), transaction_input_amounts)
 
         if request_amount > transaction_input_amount_sum:
             raise Exception('error.not_enough_input_amount')
 
-        transaction_id = uuid.uuid1().hex
         to_sender_amount = request_amount * 0.99
 
-        to_sender_transaction_output = TransactionOutput(
-            transaction_output_id = uuid.uuid1().hex,
-            transaction_id = transaction_id,
+        transaction = Transaction.build(
+            block_id = None,
+            locktime = 0,
+            timestamp = timestamp
+        )
+
+        to_sender_transaction_output = TransactionOutput.build(
+            transaction_id = transaction.transaction_id,
             amount = to_sender_amount,
             sender_address = sender_address,
             recipient_address = recipient_address,
+            timestamp = timestamp
         )
 
-        to_coinbase_amount = TransactionOutput(
-            transaction_output_id = uuid.uuid1().hex,
-            transaction_id = transaction_id,
+        to_coinbase_amount = TransactionOutput.build(
+            transaction_id = transaction.transaction_id,
             amount = request_amount - to_sender_amount,
             sender_address = sender_address,
-            recipient_address = COINBASE_ADDRESS
+            recipient_address = COINBASE_ADDRESS,
+            timestamp = timestamp
         )
 
-        to_recipient_amount = TransactionOutput(
-            transaction_output_id = uuid.uuid1().hex,
-            transaction_id = transaction_id,
+        to_recipient_amount = TransactionOutput.build(
+            transaction_id = transaction.transaction_id,
             amount = transaction_input_amount_sum - request_amount,
             sender_address = sender_address,
-            recipient_address = sender_address
+            recipient_address = sender_address,
+            timestamp = timestamp
         )
 
         transaction_outputs = [to_sender_transaction_output, to_coinbase_amount, to_recipient_amount]
+        transaction.transaction_outputs = transaction_outputs
+        transaction.transaction_inputs = transaction_inputs
 
-        transaction = Transaction(
-            transaction_id = transaction_id,
-            transaction_outputs = transaction_outputs,
-            transaction_inputs = transaction_inputs,
-            locktime = 0
-        )
+        UnconfirmedTransactionPool.transactions.append(transaction)
 
-        TransactionDb.create_transaction(session, transaction)
-        session.commit()
-
-        return transaction_id
+        return transaction
 
     @classmethod
     def assert_new_transaction(cls, transaction_id):
-        transaction = TransactionDb.find(transaction_id)
-        return transaction is not None
+        transactions = list(filter(lambda tx: tx.transaction_id == transaction_id, UnconfirmedTransactionPool.transactions))
+        return len(transactions) == 0
