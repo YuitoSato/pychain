@@ -2,7 +2,7 @@ import hashlib
 import uuid
 
 from app.database.sqlite import db
-from app.model.transaction_input import TransactionInput
+from app.models.transaction_input import TransactionInput
 from app.utils.constants import COINBASE_ADDRESS
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA

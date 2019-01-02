@@ -6,9 +6,9 @@ import requests
 
 from app.database.sqlite import db
 from app.database.unconfirmed_transaction_pool import UnconfirmedTransactionPool
-from app.model.block import Block
-from app.model.transaction import Transaction
-from app.model.transaction_output import TransactionOutput
+from app.models.block import Block
+from app.models.transaction import Transaction
+from app.models.transaction_output import TransactionOutput
 from app.models.proof_of_work import ProofOfWork
 from app.utils.constants import COINBASE_ADDRESS
 from app.utils.pychain_decorder import decode_blocks

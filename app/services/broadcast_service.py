@@ -2,7 +2,7 @@ import json
 
 import requests
 
-from app.model.peer_node import PeerNode
+from app.models.peer_node import PeerNode
 from app.utils.pychain_encoder import PychainEncoder
 
 

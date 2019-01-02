@@ -1,11 +1,11 @@
 from decimal import Decimal
 from json import JSONEncoder
 
-from app.model.block import Block
-from app.model.peer_node import PeerNode
-from app.model.transaction import Transaction
-from app.model.transaction_input import TransactionInput
-from app.model.transaction_output import TransactionOutput
+from app.models.block import Block
+from app.models.peer_node import PeerNode
+from app.models.transaction import Transaction
+from app.models.transaction_input import TransactionInput
+from app.models.transaction_output import TransactionOutput
 from app.models.proof_result import ProofResult
 
 

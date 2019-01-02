@@ -1,8 +1,8 @@
 from functools import reduce
 
 from app.database.unconfirmed_transaction_pool import UnconfirmedTransactionPool
-from app.model.transaction import Transaction
-from app.model.transaction_output import TransactionOutput
+from app.models.transaction import Transaction
+from app.models.transaction_output import TransactionOutput
 from app.utils.constants import COINBASE_ADDRESS
 
 

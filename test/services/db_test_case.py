@@ -1,9 +1,9 @@
 from unittest import TestCase
 
 from app.database.sqlite import db
-from app.model.block import Block
-from app.model.transaction import Transaction
-from app.model.transaction_output import TransactionOutput
+from app.models.block import Block
+from app.models.transaction import Transaction
+from app.models.transaction_output import TransactionOutput
 from entrypoint import create_app
 
 
