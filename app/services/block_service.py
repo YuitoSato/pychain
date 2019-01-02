@@ -17,7 +17,6 @@ from app.utils.pychain_decorder import decode_blocks
 class BlockService:
     MINER_ADDRESS = '-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAznjoHvzCJtQcIYd3yj7v\ngwaPlyiG6U/Qlw1G89n0bNt5anvRe+e2eKzvpy98aj6ShGu7hARE9SxAFA9bIHCB\nqdAyPnrUaw7qGkeZNPHBByHe9prJSn0ZwBtfySOSbzdetO5aAwvLj5qMudW2PDz1\n5mP2taGOvXqNnbcH78ZHQLvF6G+SbwuLHU5LEDSZlcy+CnvPqD67cg+QmJLneVmQ\nfOBtbFHz3yDQghNrHWa+UCspUMHVGsDG6OEK7MSpPieY6TzBEYQWsikosQ+V0zBN\nrSCADe3GBcJ7XzafM/gb+gzJ1eP78F1sA6Ja4ZtqInqN406PwerAXaUJa2twW652\n9wIDAQAB\n-----END PUBLIC KEY-----'
 
-
     @classmethod
     def list_blocks(cls):
         return Block.list()
@@ -58,12 +57,12 @@ class BlockService:
 
         db.session.commit()
 
-        transaction = cls._create_transaction_to_miner(block.block_id)
+        transaction = cls._create_transaction_to_miner()
 
         return block, proof_result, transaction
 
     @classmethod
-    def _create_transaction_to_miner(cls, block_id):
+    def _create_transaction_to_miner(cls):
         transaction_inputs = list(map(
             lambda tx_o: tx_o.to_input(''), TransactionOutput.list_unspent(COINBASE_ADDRESS)
         ))
@@ -128,19 +127,13 @@ class BlockService:
 
     @classmethod
     def _resolve_conflicts(cls, send_node_url):
-        print(send_node_url)
         json = requests.get(send_node_url + '/blocks').json()
-        print(json)
         send_node_blocks = decode_blocks(json)
-
         my_node_blocks = Block.list()
 
         forked_block_number = cls._search_forked_block_number(send_node_blocks, my_node_blocks)
-        print(forked_block_number)
         deleting_blocks = list(filter(lambda block: block.block_number > forked_block_number, my_node_blocks))
         adding_blocks = list(filter(lambda block: block.block_number > forked_block_number, send_node_blocks))
-        print(deleting_blocks)
-        print(adding_blocks)
         Block.delete_blocks(deleting_blocks)
         Block.create_blocks(adding_blocks)
 
@@ -151,4 +144,3 @@ class BlockService:
                 if block1.block_id == block2.block_id:
                     return block1.block_number
         return 0
-
