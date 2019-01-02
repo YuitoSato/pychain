@@ -1,12 +1,10 @@
 import sys
-import uuid
 
 from flask import Flask, request
 
 from app.controllers.block_controller import BlockController
 from app.controllers.transaction_controller import TransactionController
 from app.database.sqlite import init_db
-from app.models.peer_node import PeerNode
 from app.utils.pychain_encoder import PychainEncoder
 
 
@@ -21,13 +19,8 @@ def create_app():
 
 
 app = create_app()
-
-my_node = PeerNode(
-    peer_node_id = uuid.uuid1().int,
-    url = "localhost:5000",
-    address = "yuito-node"
-)
-
+node_number = create_app().config['NODE_NUMBER']
+miner_url = 'http://' + 'pychain-node' + str(node_number) + ':500' + str(node_number)
 
 @app.route('/')
 def hello_world():
@@ -52,12 +45,12 @@ def list_current_transactions():
 
 @app.route('/blocks/mine')
 def create_block():
-    return BlockController.create_block(request.host)
+    return BlockController.create_block(miner_url)
 
 
 @app.route('/blocks/receive', methods = ['POST'])
 def receive_block():
-    return BlockController.receive_block(request)
+    return BlockController.receive_block(request, miner_url)
 
 
 @app.route('/blocks')

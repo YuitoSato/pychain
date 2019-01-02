@@ -11,14 +11,14 @@ class BlockController:
         return jsonify(BlockService.list_blocks()), 200
 
     @classmethod
-    def create_block(cls, host):
+    def create_block(cls, miner_url):
         block, proof_result, transaction = BlockService.create_block()
-        BroadcastService.broadcast_block(block, proof_result, host)
+        BroadcastService.broadcast_block(block, proof_result, miner_url)
         BroadcastService.broadcast_transaction(transaction)
         return jsonify({}), 201
 
     @classmethod
-    def receive_block(cls, request):
+    def receive_block(cls, request, miner_url):
         print('received block')
         block = decode_block(request.get_json()['block'])
         is_new = BlockService.assert_new_block(block.block_id)
@@ -27,7 +27,7 @@ class BlockController:
         print('start creating block...')
         proof_result = decode_proof_result(request.get_json()['proof_result'])
         BlockService.receive_block(block, proof_result, request.get_json()['sender_node_address'])
-        BroadcastService.broadcast_block(block, proof_result, request.host)
+        BroadcastService.broadcast_block(block, proof_result, miner_url)
         print('broadcasted')
 
         return jsonify({}), 200

@@ -77,5 +77,5 @@ class TransactionOutput(db.Model):
             .all()
 
     @classmethod
-    def list(cls):
+    def list(cls) -> object:
         return cls.query.all()

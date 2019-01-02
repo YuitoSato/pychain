@@ -37,7 +37,7 @@ class Block(db.Model):
         )
 
     @classmethod
-    def list(cls):
+    def list(cls) -> object:
         return cls.query \
             .outerjoin(Transaction, cls.block_id == Transaction.block_id) \
             .outerjoin(TransactionOutput, Transaction.transaction_id == TransactionOutput.transaction_id) \
